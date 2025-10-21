@@ -3,4 +3,4 @@ import pandas as pd
 
 map = folium.Map(location= (33.82, -118.15), zoom_start=11)
 
-map.save('index.html')
+map.save('map.html')

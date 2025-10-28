@@ -1,15 +1,15 @@
 
-const fileInput = document.getElementById('fileInput')
-const fileContent = document.getElementById('fileContent')
-const messageDisplay = document.getElementById('message')
-fileInput.addEventListener('change', event);
+const fileInput = document.getElementById('fileInput');
+const fileContent = document.getElementById('fileContent');
+const messageDisplay = document.getElementById('message');
 
-const file = event.target.files[0];
+
+const file = fileInput.files[0];
 //reading the file
 const read = new FileReader();
 read.onload = function(e) {
     const content = e.target.result;
-    document.getElementById('message').textContent = "File received successfully"
+    messageDisplay.textContent = "File received successfully";
     fileContent.textContent = content;   
 }
 

@@ -2,20 +2,34 @@
 <html>
 <head>
     <link rel="stylesheet" href="styles.css">
+    <!--Leaflet CSS file-->
+    <link rel ="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!--Leaflet Javascript file -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer>
+    </script>
+
+    <!-- Cesium Files-->
+    <!-- <script src="https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Widgets/widgets.css" rel="stylesheet"> -->
+    <script src= "data.js" defer></script>
     <title>Interactive Map</title>
    
 </head>
 <body>
+
     <h1>Showing your data on the Interactive Map</h1>
     <p>Choose your file:</p>
     <input type="file" id="fileInput">
     <div id="message"></div>
     <pre id="fileContent"></pre>
-    <script src= "data.js"></script>
     
-    <div id = "map">
-        <iframe src="map.html" width = "800" height = "600"></iframe>
+    <div id= "map">
+        <!-- <iframe src="map.html" width = "800" height = "600"></iframe> -->
     
     </div>
+    <!-- <div id="cesiumMap"></div>
+    <script type="module">
+        Cesium.Ion.defaultAccess
+    </script> -->
 </body>
 </html>

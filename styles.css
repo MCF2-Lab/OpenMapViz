@@ -5,3 +5,17 @@ h1 {
 fileInput {
     margin: 20px
 }
+
+#map {
+    height: 600px;
+    width: 100%
+    
+
+}
+
+.legend {
+    line-height: 18px;
+    background-color:aliceblue;
+    height: auto;
+    padding: 5px;
+}

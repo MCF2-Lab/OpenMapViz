@@ -1,14 +1,146 @@
-h1 {
-    text-align: center
+body {
+    background-color: #3D4217;
+    /* background-color: #1e3504 ; */
+    font-family: 'Open Sans', sans-serif;
 }
 
-fileInput {
+.topbar{
+    display:flex;
+    /* align-items:center; */
+    text-align: left;
+    /* justify-content: space-between; */
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0));
+
+}
+.bar-title{
+
+    font-size: large;
+    font-weight: bold;
+    color: #fff;
+}
+.bar-subtitle {
+    font-size: small;
+    color: #fff
+}
+
+.layer-butns {
+    /* text-align:right; */
+    display: flex;
+    margin-left:auto;
+    gap: 10px; 
+
+    /* display:flex; */
+    /* justify-content:flex-end; */
+}
+
+.btn {
+    /* text-align:right; */
+    /* float:right; */
+    /* display:flex; */
+    /* justify-content: flex-end; */
+    color: #fff;
+    /* align-items: right; */
+    background: rgba(255,255,255,0.08);
+    border: 5px rgba(255,255,255,0.08);
+    border-radius: 10%;
+    padding: 8px 10px;
+}
+.btn-clear {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+    padding: 8px 10px;
+    border-radius: 10%;
+    border: 5px;
+    border-color: rgba(255,255,255,0.08);
+}
+.content {
+    height: 100vh;
+}
+
+.sidebar {
+    display:flex;
+    height:100%;
+    overflow:hidden;
+
+}
+
+
+.card {
+    /* display:flex; */
+    /* flex-direction: column; */
+    flex: 0 0 320px;
+    min-width:260px;
+    max-width: 420px;
+    overflow:auto;
+    padding: 16px;
+    background: rgba(255,255,255,0.02);
+    /* border-right: 1px solid; */
+    border-style:solid;
+    border-width:5px;
+    border-color:rgba(255,255,255,0.08);
+    border-radius: 2%;
+    gap: 10px;
+}
+
+.card h2{
+    color: #fff
+}
+
+.one-section {
+    background-color: rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:2%;
+    border-style:dashed;
+    border-color:#fff;
+    margin-bottom:15px;
+}
+
+.second-section {
+    background-color: rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:2%;
+    border-style:dashed;
+    border-color:#fff;
+    margin-bottom:15px;
+}
+
+.third-section {
+    background-color: rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:2%;
+    border-style:dashed;
+    border-color:#fff;
+
+}
+
+.layer-text {
+    color: #fff;
+}
+
+.info {
+    color: #fff;
+}
+
+
+/* fileInput {
     margin: 20px
-}
+} */
 
+.map-container {
+    flex: 1 1 auto;
+    position: relative;}
 #map {
-    height: 600px;
-    width: 100%
+    position:absolute;
+    height:100%;
+    width:100%;
+
+    /* height: 75%;
+    width: 75%; */
+    /* height: 600px;
+    width: 75%; */
+    
     
 
 }

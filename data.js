@@ -2,6 +2,8 @@
 const LONG_BEACH_COOR = [33.7701, -118.1937];
 const ZOOM = 12;
 
+const MAX_LAYERS = 3; 
+
 const map = L.map('map').setView(LONG_BEACH_COOR, ZOOM);
 
 //Open Street Map Tile Layer
@@ -42,57 +44,88 @@ let overlayControl = L.control.layers(baseMaps, {}, {collapsed: false}).addTo(ma
 
 //consists of layers uploaded with its corresponding legend
 const userData = {
-    layers: [], // {id, name, type, leafletLayer, visible, bounds, stats, styleInfo}
-    legend: { min: null, max: null, palette: null, label: "" },
+    layers: [], // { name, type, leafletLayer, visible, bounds, legend}
+    // legend: { min: null, max: null, palette: null, label: "" },
   };
   
-  function uid() {
-    return Math.random().toString(16).slice(2) + Date.now().toString(16);
-  }
-  
-  function setLegend({ min, max, palette, label }) {
-    userData.legend = { min, max, palette, label };
-    // userData.layers[legend] = { min, max, palette, label };
-    renderLegend();
-  }
-  
-  function clearLegend() {
-    // userData.layers[legend] = { min: null, max: null, palette: null, label: "" };
-    userData.legend = { min: null, max: null, palette: null, label: "" };
-    renderLegend();
-  }
 
-function renderLegend() {
-    const legendElem = document.getElementById("legend");
 
-    // userData.layers.forEach(layer => {
-    const { min, max, palette, label } = userData.legend;
-    // const { min, max, palette, label } = layer[legend];
-    // console.log(layer[legend]);
+function renderLegend(){
+  const legendElem = document.getElementById("legend");
 
-    //sets default message shown to users when there are no datasets uploaded
-    if (min === null || max === null || !palette) {
-      legendElem.innerHTML = `<div style="font-size: 16px;" class="legend-text">Load a numeric layer to see a legend.</div>`;
-      return;
-    }
-  
-    const grad = chroma.scale(palette).mode("lab").domain([0, 1]);
-    const stops = Array.from({ length: 10 }, (_, i) => {
-      // const t = min + (i / 9) * (max-min);
-      const t = i / 9;
-      return `${grad(t).hex()} ${Math.round(t * 100)}%`;
-    }).join(", ");
-  
-    legendElem.innerHTML = `
-      <div><b>${escapeHtml(label || "Value")}</b></div>
-      <div class="bar" style="background: linear-gradient(90deg, ${stops});"></div>
-      <div class="labels">
-        <span>${(min)}</span>
-        <span>${(max)}</span>
-      </div>
-    `;
-  // });
+  legendElem.innerHTML = "";
+  // return;
+
+  if (!userData.layers.length) {
+    legendElem.innerHTML =`<div style="font-size: 16px;" class="legend-text">Load a numeric layer to see a legend.</div>`;
   }
+  for (const l of userData.layers) {
+    legendElem.appendChild(createLegend(l.legend))
+  }
+}
+
+function createLegend({ min, max, palette, label }) {
+  const legend = document.createElement("div");
+  legend.className= "legend-item"
+
+  const grad = chroma.scale(palette).mode("lab").domain([0, 1]);
+  const stops = Array.from({ length: 10 }, (_, i) => {
+    // const t = min + (i / 9) * (max-min);
+    const t = i / 9;
+    return `${grad(t).hex()} ${Math.round(t * 100)}%`;
+  }).join(", ");
+
+  legend.innerHTML = `
+    <div><b>${escapeHtml(label)}</b></div>
+    <div class="bar" style="background: linear-gradient(90deg, ${stops});"></div>
+    <div class="labels">
+      <span>${(min)}</span>
+      <span>${(max)}</span>
+    </div>
+  `;
+  return legend;
+  // renderLegend();
+
+// });
+}
+
+// function renderLegend() {
+//     const legendElem = document.getElementById("legend");
+
+//     for (const l of userData.layers) {
+
+//     // userData.layers.forEach(layer => {
+//     // const { min, max, palette, label } = userData.legend;
+//     const { min, max, palette, label } = l.legend;
+//     console.log(l.legend)
+//     // const { min, max, palette, label } = layer[legend];
+//     // console.log(layer[legend]);
+
+//     //sets default message shown to users when there are no datasets uploaded
+//     if (min === null || max === null || !palette) {
+//       legendElem.innerHTML = `<div style="font-size: 16px;" class="legend-text">Load a numeric layer to see a legend.</div>`;
+//       return;
+//     }
+  
+//     const grad = chroma.scale(palette).mode("lab").domain([0, 1]);
+//     const stops = Array.from({ length: 10 }, (_, i) => {
+//       // const t = min + (i / 9) * (max-min);
+//       const t = i / 9;
+//       return `${grad(t).hex()} ${Math.round(t * 100)}%`;
+//     }).join(", ");
+  
+//     legendElem.innerHTML = `
+//       <div><b>${escapeHtml(label)}</b></div>
+//       <div class="bar" style="background: linear-gradient(90deg, ${stops});"></div>
+//       <div class="labels">
+//         <span>${(min)}</span>
+//         <span>${(max)}</span>
+//       </div>
+//     `;
+//   }
+//   // });
+//   }
+
 
 
 function escapeHtml(str) {
@@ -113,10 +146,12 @@ const messageDisplay = document.getElementById("message");
 //runs handleFile function when user selects a file
 fileInput.addEventListener("change", (e) => handleFile(e.target.files)); 
 
+
 // File handling
 function handleFile(fileList) {
     //no files uploaded
     if (!fileList || fileList.length === 0) return;
+
 
     //array supports multiple files added, iterates through file list
     Array.from(fileList).forEach((file) => {
@@ -219,6 +254,8 @@ function visual(data, fName) {
     alert("CSV must include latitude and longitude columns.");
     return;}
 
+  
+
     //finds first numerical column to visualize
     numericVal = cols.find(col => {
         const l = col.toLowerCase();
@@ -294,15 +331,15 @@ function visual(data, fName) {
              
                     });
 
+            
+
                     
                     addLayer({
                         name: fName,
                         type: "CSV",
                         leafletLayer: layerGroup,
                         bounds,
-                        stats: { count: points.length, numericVal, min, max },
-                        styleInfo: { palette, label: numericVal || "value" },
-                        legend: setLegend({ min, max, palette, label: `${fName}: ${numericVal}` })
+                        legend: { min, max, palette, label: `${fName}: ${numericVal}` }
                       });
                 // if (values.length) setLegend({ min, max, palette, label: `${fName}: ${numericVal}` });
                 // else clearLegend();
@@ -329,25 +366,30 @@ function buildPopup(layerName, props, highlightProp) {
     }
 
 //LAYERS
-function addLayer({ name, type, leafletLayer, bounds, stats, styleInfo, legend }) {
-    const id = uid();
-    // const id = leafletLayer._leaflet_id;
+
+function addLayer({ name, type, leafletLayer, bounds, legend }) {
+  
+
+
+    if (userData.layers.length > MAX_LAYERS) {
+      alert(`You can only add up to ${MAX_LAYERS} layers.`);
+      return;
+    }
 
     leafletLayer.addTo(map);
   
     userData.layers.push({
-      id,
       name,
       type,
       leafletLayer,
       visible: true,
       bounds: bounds && bounds.isValid && bounds.isValid() ? bounds : null,
-      stats,
-      styleInfo,
       legend
     });
   
     rebuildOverlayControl();
+    renderLegend();
+  
     // renderLayerList();
   }
 
@@ -363,6 +405,7 @@ function addLayer({ name, type, leafletLayer, bounds, stats, styleInfo, legend }
   
 // Initial legend - shows default message
 renderLegend();
+
 
         //adding markers based on file location data
         // data.forEach(location => {

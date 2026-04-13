@@ -4,6 +4,7 @@ const ZOOM = 12;
 
 const MAX_LAYERS = 3; 
 
+//initializing the map
 const map = L.map('map').setView(LONG_BEACH_COOR, ZOOM);
 
 //Open Street Map Tile Layer
@@ -27,47 +28,40 @@ const baseMaps = {
     
   };
   
+//uses leaflet control layers to create the layering icon
 let overlayControl = L.control.layers(baseMaps, {}, {collapsed: false}).addTo(map);
-
-// var legend = L.control({position: 'bottomright'});
-// legend.onAdd = function(e) {
-//     const div = L.DomUtil.create("div", "legend");
-//     div.innerHTML = "Legend Testing";
-//     return div;
-// };
-
-// legend.addTo(map);
-
-//initializing layer group
-//const layerGroupTest = L.layerGroup();
 
 
 //consists of layers uploaded with its corresponding legend
 const userData = {
     layers: [], // { name, type, leafletLayer, visible, bounds, legend}
-    // legend: { min: null, max: null, palette: null, label: "" },
   };
   
 
-
+//shows the legend content for each layer
 function renderLegend(){
   const legendElem = document.getElementById("legend");
 
-  legendElem.innerHTML = "";
-  // return;
+  // legendElem.innerHTML = "";
 
+  //default legend message
   if (!userData.layers.length) {
     legendElem.innerHTML =`<div style="font-size: 16px;" class="legend-text">Load a numeric layer to see a legend.</div>`;
   }
+
+  //loops through the layers and grabs their legend component
   for (const l of userData.layers) {
     legendElem.appendChild(createLegend(l.legend))
   }
 }
 
+
+//creates the legend for each layer
 function createLegend({ min, max, palette, label }) {
   const legend = document.createElement("div");
   legend.className= "legend-item"
 
+  //creates the stops for the color gradient scale
   const grad = chroma.scale(palette).mode("lab").domain([0, 1]);
   const stops = Array.from({ length: 10 }, (_, i) => {
     // const t = min + (i / 9) * (max-min);
@@ -75,6 +69,7 @@ function createLegend({ min, max, palette, label }) {
     return `${grad(t).hex()} ${Math.round(t * 100)}%`;
   }).join(", ");
 
+  //develops the final legend with the labels and color gradient scale
   legend.innerHTML = `
     <div><b>${escapeHtml(label)}</b></div>
     <div class="bar" style="background: linear-gradient(90deg, ${stops});"></div>
@@ -84,50 +79,10 @@ function createLegend({ min, max, palette, label }) {
     </div>
   `;
   return legend;
-  // renderLegend();
 
-// });
 }
 
-// function renderLegend() {
-//     const legendElem = document.getElementById("legend");
-
-//     for (const l of userData.layers) {
-
-//     // userData.layers.forEach(layer => {
-//     // const { min, max, palette, label } = userData.legend;
-//     const { min, max, palette, label } = l.legend;
-//     console.log(l.legend)
-//     // const { min, max, palette, label } = layer[legend];
-//     // console.log(layer[legend]);
-
-//     //sets default message shown to users when there are no datasets uploaded
-//     if (min === null || max === null || !palette) {
-//       legendElem.innerHTML = `<div style="font-size: 16px;" class="legend-text">Load a numeric layer to see a legend.</div>`;
-//       return;
-//     }
-  
-//     const grad = chroma.scale(palette).mode("lab").domain([0, 1]);
-//     const stops = Array.from({ length: 10 }, (_, i) => {
-//       // const t = min + (i / 9) * (max-min);
-//       const t = i / 9;
-//       return `${grad(t).hex()} ${Math.round(t * 100)}%`;
-//     }).join(", ");
-  
-//     legendElem.innerHTML = `
-//       <div><b>${escapeHtml(label)}</b></div>
-//       <div class="bar" style="background: linear-gradient(90deg, ${stops});"></div>
-//       <div class="labels">
-//         <span>${(min)}</span>
-//         <span>${(max)}</span>
-//       </div>
-//     `;
-//   }
-//   // });
-//   }
-
-
-
+//html content from file names or content is replaced with understandable string symbol
 function escapeHtml(str) {
     return String(str)
       .replaceAll("&", "&amp;")
@@ -171,15 +126,14 @@ function handleFile(fileList) {
             const parsed = await parseCSVFile(content);
             // fileContent.textContent = content; 
         //TESTING MESSAGE (DELETE LATER) 
-        messageDisplay.textContent = "File received successfully";
+        // messageDisplay.textContent = "File received successfully";
         //parsing file
-        //included for testing (DELETE LATER)
-        // fileContent.textContent = JSON.stringify(parsed, null, 2);
 
         //visualizes the data on map
         visual(parsed, fileName);       
 
         }
+        //test case: when a user uploads a file that is not CSV
         else {
             alert(`Unsupported file type: ${fileName}`);
         }
@@ -304,18 +258,14 @@ function visual(data, fName) {
             points.forEach(p => {
 
                 const color = scale(p.numValues).hex();
-                //const color = isFinite(p.numValues) ? scale(p.numValues).hex() : "#9aa7bd";
 
                 const minRange = 4;
                 const maxRange = 30;
-                //min-max scaling normation with custom ranging
-                //const color = isFinite(p.numValues) ? scale(p.numValues).hex() : "#9aa7bd";
-        
-                
 
+                //min-max scaling normalization with custom ranging
                 const radiusScale = ((p.numValues - min) / (max-min)) * (maxRange -minRange ) + minRange
-                //const radius = isFinite(p.numValues) ? radiusScale : 6;
-                
+          
+                //creates circle markers for each data point
                 const marker = L.circleMarker([p.lat, p.long], {
                     radius: radiusScale,
                     color: color,
@@ -333,7 +283,7 @@ function visual(data, fName) {
 
             
 
-                    
+                    //adds markers as a layer with metadata 
                     addLayer({
                         name: fName,
                         type: "CSV",
@@ -341,10 +291,10 @@ function visual(data, fName) {
                         bounds,
                         legend: { min, max, palette, label: `${fName}: ${numericVal}` }
                       });
-                // if (values.length) setLegend({ min, max, palette, label: `${fName}: ${numericVal}` });
-                // else clearLegend();
+    
     }
 
+//creates the popup for each value with all its data values
 function buildPopup(layerName, props, highlightProp) {
     const keys = Object.keys(props || {});
     const rows = keys
@@ -365,19 +315,20 @@ function buildPopup(layerName, props, highlightProp) {
   `;
     }
 
-//LAYERS
 
+//adds the reviewed and parsed dataset as a layer to the map with its corresponding metadata
 function addLayer({ name, type, leafletLayer, bounds, legend }) {
   
-
-
+    //tried to limit the number of layers user can add but does not work
+    //still including as future work
     if (userData.layers.length > MAX_LAYERS) {
       alert(`You can only add up to ${MAX_LAYERS} layers.`);
       return;
     }
 
     leafletLayer.addTo(map);
-  
+
+    //adds metadata to the list userData
     userData.layers.push({
       name,
       type,
@@ -390,11 +341,10 @@ function addLayer({ name, type, leafletLayer, bounds, legend }) {
     rebuildOverlayControl();
     renderLegend();
   
-    // renderLayerList();
   }
 
   
-  //adding the layers to the layers toggle on the top right
+  //adding the dataset layers to the layers toggle on the top right
   function rebuildOverlayControl() {
     overlayControl.remove();
     const overlays = {};

@@ -11,118 +11,54 @@
  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer>
     </script>
 
-    <!-- Cesium Files-->
-    <!-- <script src="https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Widgets/widgets.css" rel="stylesheet"> -->
-    <!-- <script src= "data.js" defer></script> -->
      <!-- Papa Parse library for CSV file parsing -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/chroma.min.js"></script>
      <script src= "data.js" defer></script>
+
     <title>Interactive Map Data Visualizer</title>
    
 </head>
 <body>
 
-    <!--top bar -->
+
     <header class="topbar">
         <div class="bar">
             <div class="bar-title">Interactive Map Data Visualizer</div>
             <div class="bar-subtitle">Client-only • Multi-layer • CSV points • No storage</div>
         </div>
-
-        <!-- <div class="layer-butns">
-            <button id="btnAll" class="btn">Fit all layers</button>
-            <button id="btnClear" class="btn-clear">Clear layers</button>
-        </div> -->
     </header>
 
     <main class="content">
         <div class="sidebar">
-            <!-- <div class="card"> -->
 
-                <div class="one-section">
-            
-            
+            <div class="one-section">
                 <h2>Upload data</h2>
-
-            <!-- <div class="sub-section">  -->
-
-            <!-- <div id="drop-area" class="drop">
-                <div class= "drop-title">Drag & drop CSV</div>            
-            </div>  -->
-        <!-- </div> -->
-            
-            <div class="choose-file">
-                <!-- <p>Choose your file:</p> -->
+                
+                <div class="choose-file">
                 <input type="file" id="fileInput" accept=".csv">
                 <div id="message"></div>
                 <pre id="fileContent"></pre>
             </div>
            
-
             <div class="info">
-                <p><b>CSV (points)</b>: must include <code>lat</code>, <code>lon</code>, and a numeric field like <code>value</code> or <code>water_m</code>. You can load multiple CSVs.</p>
-                <p class="muted">All parsing happens in your browser. Nothing is uploaded or stored.</p>
+                <p><b>CSV (points)</b>: must include <code>lat</code>, <code>lon</code>, and a numeric field like <code>sample_count</code>. You can load multiple CSVs.</p>
+                <p class="small">All parsing happens in your browser. Nothing is uploaded or stored.</p>
             </div>
 
         </div>
 
-        <!-- <div class="second-section">
-
-            <h2>Layer list</h2>
-            <div id="layerList" class="layer-list"></div>
-            <div class="layer-text">Load multiple datasets. Each dataset becomes a toggleable layer.</div>
-
-        </div> -->
         <div class="third-section">
             <h2>Legend</h2>
             <div id="legend" class="legend"></div>
-            <!-- <div id="legendList" class="legendList"></div> -->
-            <!-- <div class="legend-text">Load a numeric layer to see a legend.</div> -->
         </div>
-    <!-- </div> -->
-
 
 </div>
             <div class="map-container">
                 <div id= "map"></div>
-        
             </div>
-
-
-
         </div>
-        <!-- <div class="map-container">
-            <div id= "map"></div>
-    
-        </div> -->
-        
-    
-   
-
     </main>
-
-
-
-   
-    <!-- <p>Choose your file:</p>
-    <input type="file" id="fileInput">
-    <div id="message"></div>
-    <pre id="fileContent"></pre>
     
-    <div class="map-containter">
-        <div id= "map"></div> -->
-
-    <!-- </div>
-    <div id= "map"> -->
-        <!-- <iframe src="map.html" width = "800" height = "600"></iframe> -->
-    
-    <!-- </div> -->
-    <!-- <div id="cesiumMap"></div>
-    <script type="module">
-        Cesium.Ion.defaultAccess
-    </script> -->
-
 </body>
 </html>

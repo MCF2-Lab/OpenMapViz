@@ -42,7 +42,7 @@ const userData = {
 function renderLegend(){
   const legendElem = document.getElementById("legend");
 
-  // legendElem.innerHTML = "";
+  legendElem.innerHTML = "";
 
   //default legend message
   if (!userData.layers.length) {
@@ -199,7 +199,7 @@ function visual(data, fName) {
 
     //finding the latitude and longitude columns
     const latCol = cols.find(c => c.toLowerCase() === 'lat' || c.toLowerCase() === 'latitude');
-    const longCol = cols.find(c => c.toLowerCase() === 'lon' || c.toLowerCase() === 'longitude');
+    const longCol = cols.find(c => c.toLowerCase() === 'lon' || c.toLowerCase() === 'longitude' || c.toLowerCase() === "lng");
                 
     
     //checks whether file contains coordinate columns
@@ -213,11 +213,18 @@ function visual(data, fName) {
     //finds first numerical column to visualize
     numericVal = cols.find(col => {
         const l = col.toLowerCase();
-        //does not include latitude and longitude columns as numeric columns
-        if (l === latCol.toLowerCase() || l === longCol.toLowerCase()) return false;
+        //does not include latitude and longitude columns as numeric columns or column names with id or name
+        if (l === latCol.toLowerCase() || l === longCol.toLowerCase() || l.endsWith("id") || l.endsWith("ID") || l.endsWith("name") || l.endsWith("NAME")) return false;
+
         //returns boolean value - data type: number and finite number
             return data.some(r => typeof r[col] === "number" && isFinite(r[col]));
         });
+    
+    if (!numericVal) {
+      //works
+      alert("CSV must include a numerical column.");
+    return;
+    }
             
         const points = [];
         const values = [];
@@ -321,10 +328,10 @@ function addLayer({ name, type, leafletLayer, bounds, legend }) {
   
     //tried to limit the number of layers user can add but does not work
     //still including as future work
-    if (userData.layers.length > MAX_LAYERS) {
-      alert(`You can only add up to ${MAX_LAYERS} layers.`);
-      return;
-    }
+    // if (userData.layers.length + 1 > MAX_LAYERS) {
+    //   alert(`You can only add up to ${MAX_LAYERS} layers.`);
+    //   return;
+    // }
 
     leafletLayer.addTo(map);
 
